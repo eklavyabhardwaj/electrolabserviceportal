@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Customer Data</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Dynamic Customer Data</h1>
+
+        <form>
+            <div class="form-group">
+                <label for="designation">Select Designation:</label>
+                <select class="form-control" id="designation">
+                    {% for desig in designations %}
+                    <option value="{{ desig }}">{{ desig }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="territory">Select Territory:</label>
+                <select class="form-control" id="territory">
+                    <option value="">All Territories</option>
+                    {% for territory in territories %}
+                    <option value="{{ territory }}">{{ territory }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        <h2>Results:</h2>
+        <h3>Customers with no visit for designation <span id="selectedDesignation"></span> in territory <span id="selectedTerritory"></span>:</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                </tr>
+            </thead>
+            <tbody id="customersNoVisit">
+            </tbody>
+        </table>
+
+        <h3>Customers with visit dates for designation <span id="selectedDesignation2"></span> in territory <span id="selectedTerritory2"></span>:</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Last Visit Date</th>
+                </tr>
+            </thead>
+            <tbody id="customersWithVisit">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Function to update the results based on user selection
+            function updateResults() {
+                const designation = $('#designation').val();
+                const territory = $('#territory').val();
+                const customersNoVisit = $('#customersNoVisit');
+                const customersWithVisit = $('#customersWithVisit');
+                const selectedDesignation = $('#selectedDesignation');
+                const selectedTerritory = $('#selectedTerritory');
+                const selectedDesignation2 = $('#selectedDesignation2');
+                const selectedTerritory2 = $('#selectedTerritory2');
+
+                // Clear previous results
+                customersNoVisit.empty();
+                customersWithVisit.empty();
+
+                // Update the selected designation and territory display
+                selectedDesignation.text(designation);
+                selectedTerritory.text(territory || 'All Territories');
+                selectedDesignation2.text(designation);
+                selectedTerritory2.text(territory || 'All Territories');
+
+                // Send an AJAX request to get the filtered data
+                $.ajax({
+                    type: 'POST',
+                    url: '/filter_results',
+                    data: {
+                        designation: designation,
+                        territory: territory
+                    },
+                    success: function (data) {
+                        // Update the results tables
+                        customersNoVisit.html(data.customersNoVisit);
+                        customersWithVisit.html(data.customersWithVisit);
+                    }
+                });
+            }
+
+            // Trigger the update on initial page load and when the user changes the selection
+            updateResults();
+            $('#designation, #territory').change(updateResults);
+        });
+    </script>
+</body>
+</html>

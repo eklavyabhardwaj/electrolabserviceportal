@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visit Analysis</title>
+</head>
+<body>
+    <h1>Select Designation and Territory</h1>
+    <form action="/results" method="post">
+        <label for="designation">Select Designation:</label>
+        <select name="designation">
+            {% for desig in designations %}
+            <option value="{{ desig }}">{{ desig }}</option>
+            {% endfor %}
+        </select>
+        <label for="territory">Select Territory:</label>
+        <select name="territory">
+            <option value="">All Territories</option>
+            {% for territory in territories %}
+            <option value="{{ territory }}">{{ territory }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

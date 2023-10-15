@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    <h1>Results</h1>
+    <h2>Customers with no visit for designation "{{ designation }}" in territory "{{ territory }}":</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers_no_visit %}
+            <tr>
+                <td>{{ customer }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Customers with visit dates for designation "{{ designation }}" in territory "{{ territory }}":</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Last Visit Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in customers_with_visit %}
+            <tr>
+                <td>{{ row.customer }}</td>
+                <td>{{ row.visit_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
